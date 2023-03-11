@@ -1,0 +1,219 @@
+<!-- Products Table -->
+<div class="container text-center mt-1">
+  <div class="card p-2">
+    <div class="card-title d-flex justify-content-center align-items-center">
+      <h5> Produse </h5>
+    </div>
+    <a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#addNewProductModal">
+      <i class="fa-solid fa-plus"></i> Adauga Produs
+    </a>
+    <div class="card-table">
+      <div class="cart-product table-responsive">
+        <table class="table table-striped table-hover table-bordered align-middle table-sm">
+          <thead>
+            <tr>
+              <th> # </th>
+              <th> Id </th>
+              <th> Magazin </th>
+              <th> Denumire </th>
+              <th> Data Inregistrare </th>
+              <th> Cantitate </th>
+              <th> Pret Unitar </th>
+              <th> Editare/Stergere </th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            <tr *ngFor="let product of products$ | async; let i=index">
+              <td> {{ i + 1 }} </td>
+              <td> {{ product.CodIdx }} </td>
+              <td> {{ product.CodMagazin }} </td>
+              <td> {{ product.Denumire }} </td>
+              <td> {{ product.DataInregistrare | date: 'dd/MM/yyyy HH:mm:ss'}} </td>
+              <td> {{ product.Cantitate }} </td>
+              <td> {{ product.PretUnitar }} </td>
+              <td class="d-flex justify-content-evenly">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProductModal" (click)="saveProductToChangeAfterConfirmation(product)">
+                  <i class="fa-solid fa-pencil"></i>
+                </button>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProductModal" (click)="saveProductToChangeAfterConfirmation(product)">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal and Form for adding new product -->
+<div class="modal fade" id="addNewProductModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button #modalCloseButton1 type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <h1 class="modal-title fs-5 text-center"> Adauga Produs </h1>
+      <div class="modal-body">
+        <form 
+          (ngSubmit)="submitAddNewProductForm()"
+          [formGroup]="addNewProductForm">
+          <table class="table table-striped table-hover align-middle table-sm">
+            <tbody>
+              <tr>
+                <th class="text-end"> Denumire Produs </th>
+                <td>
+                  <input class="form-control" formControlName="Denumire">
+                  <small
+                    *ngIf="(addNewProductForm.controls.Denumire.invalid && addNewProductForm.controls.Denumire.dirty)
+                      || (addNewProductForm.controls.Denumire.invalid && addNewProductFormSubmitted)"
+                    class="text-danger">
+                      Introdu te rog minim 3 caractere!
+                  </small>
+                </td>
+              </tr>
+              <tr>
+                <th class="text-end"> Magazin </th>
+                <td>
+                  <input class="form-control" formControlName="CodMagazin">
+                  <small
+                    *ngIf="(addNewProductForm.controls.CodMagazin.invalid && addNewProductForm.controls.CodMagazin.dirty)
+                      || (addNewProductForm.controls.CodMagazin.invalid && addNewProductFormSubmitted)"
+                    class="text-danger">
+                      Introdu te rog minim 3 caractere!
+                  </small>
+                </td>
+              </tr>
+              <tr>
+                <th class="text-end"> Cantitate </th>
+                <td>
+                  <input class="form-control" formControlName="Cantitate">
+                  <small
+                    *ngIf="(addNewProductForm.controls.Cantitate.invalid && addNewProductForm.controls.Cantitate.dirty)
+                      || (addNewProductForm.controls.Cantitate.invalid && addNewProductFormSubmitted)"
+                    class="text-danger">
+                      Introdu te rog doar numere!
+                  </small>
+                </td>
+              </tr>
+              <tr>
+                <th class="text-end"> Pret Unitar </th>
+                <td>
+                  <input class="form-control" formControlName="PretUnitar">
+                  <small
+                    *ngIf="(addNewProductForm.controls.PretUnitar.invalid && addNewProductForm.controls.PretUnitar.dirty)
+                      || (addNewProductForm.controls.PretUnitar.invalid && addNewProductFormSubmitted)"
+                    class="text-danger">
+                      Introdu te rog doar numere!
+                  </small>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="modal-footer border-top-0">
+            <button type="submit" class="btn btn-primary"> Adauga </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> Anulare </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal and Form for editing -->
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button #modalCloseButton2 type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <h1 class="modal-title fs-5 text-center"> Editeaza Produs </h1>
+      <div class="modal-body">
+        <form 
+          (ngSubmit)="submitEditProductForm()"
+          [formGroup]="editProductForm">
+          <table class="table table-striped table-hover align-middle table-sm">
+            <tbody>
+              <tr>
+                <th class="text-end"> Id </th>
+                <td> {{ productToChangeAfterConfirmation.CodIdx }} </td>
+              </tr>
+              <tr>
+                <th class="text-end"> Magazin </th>
+                <td>
+                  <input class="form-control" formControlName="CodMagazin">
+                  <small
+                    *ngIf="(editProductForm.controls.CodMagazin.invalid && editProductForm.controls.CodMagazin.dirty)
+                      || (editProductForm.controls.CodMagazin.invalid && editProductFormSubmitted)"
+                    class="text-danger">
+                      Introdu te rog minim 3 caractere!
+                  </small>
+                </td>
+              </tr>
+              <tr>
+                <th class="text-end"> Denumire Produs </th>
+                <td>
+                  <input class="form-control" formControlName="Denumire">
+                  <small
+                    *ngIf="(editProductForm.controls.Denumire.invalid && editProductForm.controls.Denumire.dirty)
+                      || (editProductForm.controls.Denumire.invalid && editProductFormSubmitted)"
+                    class="text-danger">
+                      Introdu te rog minim 3 caractere!
+                  </small>
+                </td>
+              </tr>
+              <tr>
+                <th class="text-end"> Data Inregistrare </th>
+                <td> {{ productToChangeAfterConfirmation.DataInregistrare | date }} </td>
+              </tr>
+              <tr>
+                <th class="text-end"> Cantitate </th>
+                <td>
+                  <input class="form-control" formControlName="Cantitate">
+                  <small
+                    *ngIf="(editProductForm.controls.Cantitate.invalid && editProductForm.controls.Cantitate.dirty)
+                      || (editProductForm.controls.Cantitate.invalid && editProductFormSubmitted)"
+                    class="text-danger">
+                      Introdu te rog doar numere!
+                  </small>
+                </td>
+              </tr>
+              <tr>
+                <th class="text-end"> Pret Unitar </th>
+                <td>
+                  <input class="form-control" formControlName="PretUnitar">
+                  <small
+                    *ngIf="(editProductForm.controls.PretUnitar.invalid && editProductForm.controls.PretUnitar.dirty)
+                      || (editProductForm.controls.PretUnitar.invalid && editProductFormSubmitted)"
+                    class="text-danger">
+                      Introdu te rog doar numere!
+                  </small>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"> Save </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> Cancel </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal for delete confirmation -->
+<div class="modal fade" id="deleteProductModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5"> </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <h2 class="delete-modal-body-height fs-5 row justify-content-center align-items-center"> Esti sigur ca doresti sa stergi acest produs? </h2>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteProduct()"> Sterge </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> Anulare </button>
+      </div>
+    </div>
+  </div>
+</div>

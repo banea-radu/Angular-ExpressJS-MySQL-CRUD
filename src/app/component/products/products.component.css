@@ -1,0 +1,4 @@
+.modal-header, .modal-footer {
+  border-top: 0;
+  border-bottom: 0;
+}
