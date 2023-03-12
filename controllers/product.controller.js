@@ -20,7 +20,7 @@ exports.create = (req, res) => {
         PretUnitar: req.body.PretUnitar,
     });
   
-    // Save Tutorial in the database
+    // Save Product in the database
     Product.create(product, (err, data) => {
         if (err)
             res.status(500).send({
