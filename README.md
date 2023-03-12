@@ -7,12 +7,7 @@
     2. "backend" : for backend ExpressJS
     
   ### Main functionalities:
-    - View a list of products and output in html Table
-    - CRUD operations:
-      - get all products
-      - add new product
-      - edit product
-      - delete product
+    - Get a list of products and output in html Table view
     - sql database (MariaDB):
       - table "produse" structure:
         - CodIdx - string, 20 char
@@ -21,6 +16,11 @@
         - DataInregistare - date (datetime)
         - Cantitate - numeric
         - PretUnitar - numeric
+      - CRUD operations:
+        - (C)reate : new product
+        - (R)ead : all products
+        - (U)pdate : product by "CodIdx"
+        - (D)elete : product by "CodIdx"
 
 ### Technologies used:
 <div>
