@@ -31,7 +31,7 @@ exports.create = (req, res) => {
     });
 };
 
-// Retrieve all Products from the database (with condition).
+// Retrieve all Products from the database
 exports.getAll = (req, res) => {
     const CodIdx = req.query.CodIdx;
   
