@@ -24,12 +24,12 @@ Product.create = (newProduct, result) => {
     });
 };
   
-// Get all products
+// Get all products (with WHERE condition if id was passed in the request)
 Product.getAll = (CodIdx, result) => {
     const query = "SELECT * FROM produse";
 
     if (CodIdx) {
-        query += ` WHERE title LIKE '%${CodIdx}%'`;
+        query += ` WHERE CodIdx LIKE '%${CodIdx}%'`;
     }
 
     sql.query(query, (err, res) => {
